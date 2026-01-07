@@ -1,8 +1,8 @@
 """
 Hybrid Data Source Orchestrator.
 
-Priority-based data retrieval system that optimizes cost by checking
-cache first, then free sources (yfinance), then paid sources (Bright Data).
+Priority-based data retrieval system that checks cache first,
+then Bright Data (Bloomberg), with yfinance as fallback.
 """
 
 import asyncio
@@ -25,12 +25,12 @@ logger = logging.getLogger(__name__)
 
 class HybridDataSource:
     """
-    Cost-optimized hybrid data source with priority-based retrieval.
+    Hybrid data source with priority-based retrieval.
 
     Retrieval Priority:
         1. Cache (cost: $0, TTL: 15 min)
-        2. YFinance (cost: $0, free API)
-        3. Bright Data (cost: $0.0015 per request)
+        2. Bright Data (cost: $0.0015 per request, Bloomberg data)
+        3. YFinance (cost: $0, fallback)
 
     Features:
         - Automatic fallback through data source hierarchy
@@ -143,8 +143,8 @@ class HybridDataSource:
 
         Retrieval order:
             1. Cache (if not force_fresh)
-            2. YFinance (free)
-            3. Bright Data (paid)
+            2. Bright Data (Bloomberg, paid)
+            3. YFinance (fallback, free)
 
         Args:
             symbol: Trading symbol (Bloomberg format preferred)
@@ -175,45 +175,7 @@ class HybridDataSource:
 
         self._stats["cache_misses"] += 1
 
-        # Step 2: Try YFinance (free source)
-        if self.breakers["yfinance"].is_available():
-            try:
-                yf_symbol = self._convert_symbol_for_yfinance(symbol, asset_class)
-                logger.debug(f"Attempting yfinance fetch for {yf_symbol}")
-
-                yf_data = self.breakers["yfinance"].call(
-                    self.yfinance.fetch_quote, yf_symbol
-                )
-
-                if yf_data:
-                    # Transform to MarketQuote
-                    quote = DataTransformer.from_yfinance(
-                        {**yf_data, "symbol": symbol}, asset_class
-                    )
-
-                    # Cache the result
-                    self.cache.set(asset_class.value, symbol, quote.to_dict())
-                    self._stats["yfinance_successes"] += 1
-
-                    logger.info(
-                        f"Successfully fetched {symbol} from yfinance (cost: $0)",
-                        extra={"source": "yfinance", "symbol": symbol, "price": quote.price},
-                    )
-                    return quote
-
-            except CircuitBreakerError:
-                logger.warning(f"YFinance circuit breaker is open for {symbol}")
-                self._stats["yfinance_failures"] += 1
-
-            except APIError as e:
-                logger.warning(f"YFinance failed for {symbol}: {e}")
-                self._stats["yfinance_failures"] += 1
-
-            except Exception as e:
-                logger.error(f"Unexpected error with yfinance for {symbol}: {e}")
-                self._stats["yfinance_failures"] += 1
-
-        # Step 3: Try Bright Data (paid source)
+        # Step 2: Try Bright Data (primary source - Bloomberg data)
         if self.breakers["bright_data"].is_available():
             try:
                 # Check budget before making paid request
@@ -271,7 +233,7 @@ class HybridDataSource:
 
             except BudgetExhaustedError:
                 logger.error(f"Budget exhausted - cannot fetch {symbol} from Bright Data")
-                raise
+                # Fall through to YFinance as fallback
 
             except CircuitBreakerError:
                 logger.warning(f"Bright Data circuit breaker is open for {symbol}")
@@ -290,6 +252,44 @@ class HybridDataSource:
                     asset_class=asset_class.value, symbol=symbol, success=False
                 )
                 self._stats["bright_data_failures"] += 1
+
+        # Step 3: Try YFinance (fallback source)
+        if self.breakers["yfinance"].is_available():
+            try:
+                yf_symbol = self._convert_symbol_for_yfinance(symbol, asset_class)
+                logger.debug(f"Attempting yfinance fetch for {yf_symbol} (fallback)")
+
+                yf_data = self.breakers["yfinance"].call(
+                    self.yfinance.fetch_quote, yf_symbol
+                )
+
+                if yf_data:
+                    # Transform to MarketQuote
+                    quote = DataTransformer.from_yfinance(
+                        {**yf_data, "symbol": symbol}, asset_class
+                    )
+
+                    # Cache the result
+                    self.cache.set(asset_class.value, symbol, quote.to_dict())
+                    self._stats["yfinance_successes"] += 1
+
+                    logger.info(
+                        f"Successfully fetched {symbol} from yfinance (fallback, cost: $0)",
+                        extra={"source": "yfinance", "symbol": symbol, "price": quote.price},
+                    )
+                    return quote
+
+            except CircuitBreakerError:
+                logger.warning(f"YFinance circuit breaker is open for {symbol}")
+                self._stats["yfinance_failures"] += 1
+
+            except APIError as e:
+                logger.warning(f"YFinance failed for {symbol}: {e}")
+                self._stats["yfinance_failures"] += 1
+
+            except Exception as e:
+                logger.error(f"Unexpected error with yfinance for {symbol}: {e}")
+                self._stats["yfinance_failures"] += 1
 
         # All sources failed
         logger.error(f"Failed to fetch {symbol} from all sources")

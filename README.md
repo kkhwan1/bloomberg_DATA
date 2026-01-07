@@ -5,7 +5,7 @@
 ## 프로젝트 개요
 
 Bloomberg, YFinance 등 다양한 소스에서 금융 데이터를 수집하는 하이브리드 크롤러입니다.
-비용 효율적인 데이터 수집을 위해 **캐시 → 무료 API → 유료 API** 순서로 데이터를 조회합니다.
+Bloomberg 데이터 우선 수집을 위해 **캐시 → Bright Data (Bloomberg) → YFinance (fallback)** 순서로 데이터를 조회합니다.
 
 **예산**: $5.50 (요청당 $0.0015 = 약 3,667회 유료 요청 가능)
 
@@ -169,9 +169,8 @@ python -m pytest tests/ --cov=src --cov-report=html
 
 ### 데이터 소스 우선순위
 1. **캐시** (SQLite, 15분 TTL) - 무료
-2. **YFinance** - 무료
-3. **Finnhub** - 무료 (WebSocket)
-4. **Bright Data** - 유료 ($0.0015/요청)
+2. **Bright Data** - 유료 ($0.0015/요청, Bloomberg 데이터)
+3. **YFinance** - 무료 (fallback)
 
 ### 비용 관리
 - `logs/cost_tracking.json`에 사용량 기록

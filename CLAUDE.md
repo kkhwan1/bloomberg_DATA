@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-Bloomberg Data Crawler - Cost-optimized financial data collection system for algorithmic trading. Uses hybrid data sources with priority-based retrieval: Cache → Free APIs (yfinance, Finnhub) → Paid API (Bright Data).
+Bloomberg Data Crawler - Financial data collection system for algorithmic trading. Uses hybrid data sources with priority-based retrieval: Cache → Bright Data (Bloomberg) → YFinance (fallback).
 
 **Budget**: $5.50 total, $0.0015/request = ~3,667 paid requests available.
 
@@ -61,7 +61,7 @@ src/main.py (CLI - argparse)
     │
     ├── orchestrator/
     │   ├── scheduler.py       APScheduler, 15min interval
-    │   ├── hybrid_source.py   Priority: Cache → yfinance → Bright Data
+    │   ├── hybrid_source.py   Priority: Cache → Bright Data → yfinance
     │   ├── cost_tracker.py    Singleton, JSON persistence
     │   ├── cache_manager.py   SQLite, 15min TTL
     │   └── circuit_breaker.py 3-state: CLOSED/OPEN/HALF_OPEN
