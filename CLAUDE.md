@@ -2,148 +2,89 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-## Project Overview
+## 프로젝트 개요
 
-Bloomberg Data Crawler - Financial data collection system for algorithmic trading. Uses hybrid data sources with priority-based retrieval: Cache → Bright Data (Bloomberg) → YFinance (fallback).
+59개국 글로벌 주가지수를 Bloomberg에서 수집하는 크롤러
 
-**Budget**: $5.50 total, $0.0015/request = ~3,667 paid requests available.
-
-## Commands
+## 핵심 실행 명령어
 
 ```bash
-# Install dependencies
-pip install -r requirements.txt
-
-# Run CLI (one-time fetch)
-python -m src.main AAPL MSFT GOOGL --once
-
-# Run CLI (scheduled, 15min interval)
-python -m src.main AAPL MSFT --interval 15
-
-# Check budget status
-python -m src.main --budget
-
-# Run all tests
-python -m pytest tests/ -v
-
-# Run single test file
-python -m pytest tests/test_cost_tracker.py -v
-
-# Run single test function
-python -m pytest tests/test_bloomberg_parser.py::test_parse_next_data -v
-
-# Run tests with coverage
-python -m pytest tests/ --cov=src --cov-report=html
-
-# Test Bright Data API directly
-python scripts/test_bright_data_api.py
-
-# Compare Bloomberg vs YFinance data
-python scripts/compare_sources.py
-
-# Crawl all 59 global indices
+# 전체 59개 인덱스 크롤링
 python scripts/crawl_indices.py
 
-# Test index crawl (first 2 indices only)
+# 테스트 (처음 2개만)
 python scripts/crawl_indices.py --test
 
-# Crawl specific index by ID
+# 특정 인덱스 크롤링 (ID: 1-59)
 python scripts/crawl_indices.py --index 25
 
-# Crawl range of indices
+# 범위 지정 크롤링
 python scripts/crawl_indices.py --range 1 10
+
+# 딜레이 조정 (기본 1초)
+python scripts/crawl_indices.py --delay 2.0
 ```
 
-## Architecture
+## 결과 저장 위치
 
 ```
-src/main.py (CLI - argparse)
-    │
-    ├── orchestrator/
-    │   ├── scheduler.py       APScheduler, 15min interval
-    │   ├── hybrid_source.py   Priority: Cache → Bright Data → yfinance
-    │   ├── cost_tracker.py    Singleton, JSON persistence
-    │   ├── cache_manager.py   SQLite, 15min TTL
-    │   └── circuit_breaker.py 3-state: CLOSED/OPEN/HALF_OPEN
-    │
-    ├── clients/
-    │   ├── yfinance_client.py (FREE)
-    │   ├── finnhub_ws.py      (FREE, WebSocket)
-    │   └── bright_data.py     (PAID, Bearer token + JSON API)
-    │
-    ├── parsers/
-    │   └── bloomberg_parser.py  Priority: __NEXT_DATA__ → JSON-LD → HTML
-    │
-    ├── normalizer/
-    │   ├── schemas.py         Pydantic: MarketQuote, AssetClass enum
-    │   └── transformer.py     from_yfinance(), from_bloomberg()
-    │
-    └── storage/
-        ├── csv_writer.py      data/{asset_class}/{symbol}/YYYYMMDD.csv
-        └── json_writer.py     data/{asset_class}/{symbol}/YYYYMMDD.jsonl
+data/
+├── index_urls.json              # 59개 인덱스 URL 매핑
+└── indices/
+    ├── IN_BSE30/                # 인도 SENSEX
+    │   ├── 20260107.json        # 일별 JSON 결과
+    │   └── 20260107.csv         # 일별 CSV 결과
+    ├── ZA_ALSH/                  # 남아프리카 JALSH
+    │   └── ...
+    └── crawl_summary_*.json     # 크롤링 요약
 ```
 
-## Key Design Patterns
+## 결과 데이터 예시
 
-- **CostTracker**: Thread-safe singleton with JSON persistence (`logs/cost_tracking.json`)
-- **CacheManager**: SQLite with 15-min TTL, auto-cleanup of expired entries
-- **HybridDataSource**: Async, tries sources in cost order until success
-- **CircuitBreaker**: 3-state machine protecting each data source independently
-- **BloombergParser**: Extracts data from `__NEXT_DATA__` script tag (`pageProps.quote`)
-
-## Bright Data API
-
-Uses Bearer token authentication with JSON body (not proxy):
-```python
-headers = {"Authorization": f"Bearer {token}", "Content-Type": "application/json"}
-payload = {"zone": "bloomberg", "url": target_url, "format": "raw"}
-# POST to https://api.brightdata.com/request
+`data/indices/IN_BSE30/20260107.json`:
+```json
+{
+  "crawl_info": {
+    "code": "IN@BSE30",
+    "country": "India",
+    "bloomberg_symbol": "SENSEX:IND",
+    "cost_usd": 0.0015
+  },
+  "quote_data": {
+    "name": "S&P BSEセンセックス",
+    "price": 85063.34,
+    "change": -376.28,
+    "change_percent": -0.44,
+    "day_high": 85397.78,
+    "day_low": 84900.1
+  }
+}
 ```
 
-## Bloomberg Parser Field Mapping
+## 주요 파일
 
-Bloomberg HTML uses `__NEXT_DATA__` with these field names in `pageProps.quote`:
-- `price`, `priceChange1Day`, `percentChange1Day`
-- `highPrice`, `lowPrice`, `openPrice`, `prevClose`
-- `highPrice52Week`, `lowPrice52Week`
-- `volume` (string with commas: "52,262,300.00")
+| 파일 | 설명 |
+|------|------|
+| `scripts/crawl_indices.py` | 메인 크롤링 스크립트 |
+| `data/index_urls.json` | 59개 인덱스 URL 매핑 |
+| `src/parsers/bloomberg_parser.py` | Bloomberg HTML 파서 |
+| `src/clients/bright_data.py` | Bright Data API 클라이언트 |
 
-## Configuration
+## 환경 설정
 
-Copy `.env.example` to `.env` and set `BRIGHT_DATA_TOKEN`. Key settings:
-- `TOTAL_BUDGET=5.50` - Total USD budget
-- `COST_PER_REQUEST=0.0015` - Per-request cost for Bright Data
-- `CACHE_TTL_SECONDS=900` - 15-minute cache TTL
-- `ALERT_THRESHOLD=0.80` - Warn at 80% budget usage
+```bash
+# .env 파일에 토큰 설정
+BRIGHT_DATA_TOKEN=your_token_here
+```
 
-## Exception Hierarchy
+## 비용
 
-All exceptions inherit from `BloombergDataError` in `src/utils/exceptions.py`:
-- `BudgetExhaustedError` - API budget limit reached
-- `CacheError` - Cache read/write failures
-- `ParsingError` - Data extraction failures
-- `APIError` → `RateLimitError` - HTTP/network errors
-- `CircuitBreakerError` - Service protection triggered
-- `DataNormalizationError` - Data transformation failures
+- 요청당: $0.0015
+- 전체 59개: $0.0885
+- 예산: $5.50
 
-## Testing
+## 테스트
 
-Uses pytest with fixtures in `tests/conftest.py`:
-- `mock_cost_tracker` - Mock without affecting real budget
-- `clean_cache_manager` - Isolated SQLite instance
-- `sample_bloomberg_html` - HTML with JSON-LD data
-- `mock_market_quote` - Sample MarketQuote object
-
-## Symbol Formats
-
-- Bloomberg: `AAPL:US`, `EURUSD:CUR`
-- yfinance: `AAPL`, `EURUSD=X`, `GC=F` (commodities)
-- Conversion handled in `HybridDataSource._convert_symbol_for_*`
-
-## Global Index Crawling
-
-59 global indices from Bloomberg JP, mapped in `data/index_urls.json`:
-- Code format: `{COUNTRY}@{INDEX}` (e.g., `IN@BSE30`, `ZA@ALSH`)
-- Bloomberg symbol mapping: `IN@BSE30` → `SENSEX:IND`, `ID@JKSE` → `JCI:IND`
-- Output: `data/indices/{CODE}/YYYYMMDD.json` (individual files per index)
-- Cost: 59 × $0.0015 = $0.0885 per full crawl
+```bash
+python -m pytest tests/ -v
+```
