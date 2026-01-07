@@ -78,8 +78,8 @@ Priority-based data retrieval system with cost optimization.
 #### Data Source Priority
 
 1. **Cache** (Cost: $0, TTL: 15 minutes)
-2. **YFinance** (Cost: $0, free API)
-3. **Bright Data** (Cost: $0.0015 per request)
+2. **Bright Data** (Cost: $0.0015 per request, Bloomberg data)
+3. **YFinance** (Cost: $0, fallback)
 
 #### Usage
 
@@ -267,12 +267,12 @@ for job in stats['scheduled_jobs']:
 
 ## Architecture Patterns
 
-### Cost Optimization Flow
+### Data Retrieval Flow
 
 ```
-Request → Cache Check → YFinance (Free) → Bright Data (Paid)
-            ↓              ↓                    ↓
-          $0.00          $0.00               $0.0015
+Request → Cache Check → Bright Data (Primary) → YFinance (Fallback)
+            ↓                  ↓                      ↓
+          $0.00             $0.0015                 $0.00
 ```
 
 ### Circuit Breaker Integration
