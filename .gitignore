@@ -1,0 +1,189 @@
+# Bloomberg Data Crawler - Git Ignore Rules
+
+# ==============================================================================
+# CRITICAL: Environment & Credentials (NEVER COMMIT)
+# ==============================================================================
+.env
+.env.local
+.env.*.local
+*credentials*.json
+*secrets*.json
+*.pem
+*.key
+
+# ==============================================================================
+# Python
+# ==============================================================================
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# C extensions
+*.so
+
+# Distribution / packaging
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# PyInstaller
+*.manifest
+*.spec
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.log
+.pytest_cache/
+.hypothesis/
+
+# Virtual environments
+venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+.venv/
+
+# Type checking
+.mypy_cache/
+.dmypy.json
+dmypy.json
+.pyre/
+.pytype/
+
+# ==============================================================================
+# Project-Specific Data Directories
+# ==============================================================================
+# Cache and database files
+data/
+cache/
+logs/
+*.db
+*.sqlite
+*.sqlite3
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+
+# Output files
+output/
+exports/
+downloads/
+
+# ==============================================================================
+# IDEs and Editors
+# ==============================================================================
+# VSCode
+.vscode/
+*.code-workspace
+
+# PyCharm
+.idea/
+*.iml
+*.iws
+*.ipr
+
+# Sublime Text
+*.sublime-project
+*.sublime-workspace
+
+# Vim
+*.swp
+*.swo
+*~
+
+# Emacs
+*~
+\#*\#
+/.emacs.desktop
+/.emacs.desktop.lock
+*.elc
+
+# ==============================================================================
+# Operating System
+# ==============================================================================
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon
+._*
+
+# Windows
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+*.stackdump
+[Dd]esktop.ini
+$RECYCLE.BIN/
+
+# Linux
+.Trash-*
+.nfs*
+
+# ==============================================================================
+# Documentation
+# ==============================================================================
+# Sphinx documentation
+docs/_build/
+docs/_static/
+docs/_templates/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+*.ipynb
+
+# ==============================================================================
+# Package Managers
+# ==============================================================================
+# pip
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Poetry
+poetry.lock
+
+# pipenv
+Pipfile.lock
+
+# ==============================================================================
+# Misc
+# ==============================================================================
+# Backup files
+*.bak
+*.backup
+*~
+
+# Archive files
+*.zip
+*.tar
+*.tar.gz
+*.rar
+*.7z

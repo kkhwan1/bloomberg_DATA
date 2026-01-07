@@ -1,0 +1,39 @@
+{
+  "@context": "https://schema.org",
+  "@type": "WebPage",
+  "name": "AAPL: Apple Inc Stock Price Quote - NASDAQ GS - Bloomberg",
+  "description": "Stock analysis for Apple Inc (AAPL:NASDAQ GS) including stock price, stock chart, company news, key statistics, fundamentals and company profile.",
+  "keywords": "Apple Inc, Apple Inc stock, Apple Inc stock price, Apple Inc stock charts, AAPL price quote, AAPL quote, Apple Inc news, AAPL, AAPL stock, AAPL stock price, AAPL stock charts, stock, stock price, stock charts",
+  "mainEntityOfPage": "https://www.bloomberg.com/quote/AAPL:US",
+  "mentions": [
+    {
+      "@context": "http://schema.org",
+      "@type": "Thing",
+      "name": "technology",
+      "url": "https://www.bloomberg.com/markets/sectors/information-technology"
+    },
+    {
+      "@context": "http://schema.org",
+      "@type": "Thing",
+      "name": "Apple Inc",
+      "url": "https://www.bloomberg.com/profile/company/AAPL:US"
+    }
+  ],
+  "publisher": {
+    "@type": "Organization",
+    "name": "Bloomberg",
+    "url": "https://www.bloomberg.com",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https:/assets.bwbx.io/s3/bazaar/_next/static/media/bloomberg-logo-amp.bae0aa0a.png",
+      "width": 262,
+      "height": 60
+    }
+  },
+  "isAccessibleForFree": "False",
+  "hasPart": {
+    "@type": "WebPageElement",
+    "isAccessibleForFree": "False",
+    "cssSelector": ".paywall"
+  }
+}

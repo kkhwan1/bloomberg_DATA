@@ -1,0 +1,68 @@
+{
+  "@context": "https://schema.org",
+  "@type": "Corporation",
+  "name": "Apple Inc",
+  "description": "Apple Inc. designs, manufactures, and markets smartphones, personal computers, tablets, wearables and accessories, and sells a variety of related accessories. The Company also offers payment, digital content, cloud and advertising services. Apple Inc.'s customers are primarily in consumer, small & mid-sized business, education, enterprise and government markets worldwide.",
+  "address": "1 Apple Park Way\nCupertino, CA 95014\nUnited States",
+  "telephone": "1-408-996-1010",
+  "foundingDate": "01/03/1977",
+  "url": "www.apple.com",
+  "numberOfEmployees": 166000,
+  "employee": [
+    {
+      "@context": "https://schema.org",
+      "@type": "Person",
+      "name": "Timothy Donald Cook",
+      "jobTitle": "Chief Executive Officer",
+      "worksFor": "Apple Inc",
+      "image": {
+        "@type": "ImageObject",
+        "url": "https://assets.bwbx.io/images/users/iqjWHBFdfxIU/iOIEqOOiLpFY/v3/80x80.jpg"
+      }
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "Person",
+      "name": "Sabih Khan",
+      "jobTitle": "Chief Operating Officer",
+      "worksFor": "Apple Inc",
+      "image": {
+        "@type": "ImageObject",
+        "url": "https://assets.bwbx.io/images/users/iqjWHBFdfxIU/iGtFcJV8Hk3k/v2/80x80.png"
+      }
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "Person",
+      "name": "Kevan Parekh",
+      "jobTitle": "Senior VP/CFO",
+      "worksFor": "Apple Inc",
+      "image": {
+        "@type": "ImageObject",
+        "url": "https://assets.bwbx.io/images/users/iqjWHBFdfxIU/ity820Dd285E/v2/80x80.jpg"
+      }
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "Person",
+      "name": "Dr Arthur D Levinson PhD",
+      "jobTitle": null,
+      "worksFor": null
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "Person",
+      "name": "Dr Ronald D Sugar",
+      "jobTitle": null,
+      "worksFor": null
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "Person",
+      "name": "Andrea Jung",
+      "jobTitle": null,
+      "worksFor": "Grameen America Inc"
+    }
+  ],
+  "tickerSymbol": "NASDAQ AAPL"
+}

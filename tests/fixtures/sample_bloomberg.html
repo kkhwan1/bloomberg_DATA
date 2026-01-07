@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AAPL:US Quote - Apple Inc. - Bloomberg Markets</title>
+
+    <!-- JSON-LD Structured Data -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "Corporation",
+        "name": "Apple Inc.",
+        "tickerSymbol": "AAPL",
+        "price": 185.50,
+        "priceChange": 2.35,
+        "priceChangePercent": 1.28,
+        "priceCurrency": "USD",
+        "volume": 45678900,
+        "marketCap": 2850000000000
+    }
+    </script>
+
+    <!-- Next.js Data -->
+    <script id="__NEXT_DATA__" type="application/json">
+    {
+        "props": {
+            "pageProps": {
+                "quote": {
+                    "ticker": "AAPL",
+                    "name": "Apple Inc.",
+                    "lastPrice": 185.50,
+                    "change": 2.35,
+                    "changePercent": 1.28,
+                    "currency": "USD",
+                    "volume": 45678900,
+                    "marketCap": 2850000000000,
+                    "high": 187.20,
+                    "low": 183.10,
+                    "open": 184.00,
+                    "previousClose": 183.15,
+                    "yearHigh": 199.62,
+                    "yearLow": 124.17
+                }
+            }
+        },
+        "page": "/quote/[id]",
+        "query": {
+            "id": "AAPL:US"
+        },
+        "buildId": "1234567890"
+    }
+    </script>
+
+    <style>
+        body { font-family: Arial, sans-serif; }
+        .quote-header { margin: 20px; }
+        .price { font-size: 36px; font-weight: bold; color: #2c3e50; }
+        .change-positive { color: #27ae60; }
+        .change-negative { color: #e74c3c; }
+        .data-table { border-collapse: collapse; width: 100%; }
+        .data-table td, .data-table th { border: 1px solid #ddd; padding: 12px; text-align: left; }
+    </style>
+</head>
+<body>
+    <!-- Quote Header -->
+    <div class="quote-header">
+        <h1 class="security-name">Apple Inc.</h1>
+        <div class="ticker-symbol">AAPL:US</div>
+        <div class="price">$185.50</div>
+        <div class="change change-positive">
+            <span class="change-value">+2.35</span>
+            <span class="change-percent">(+1.28%)</span>
+        </div>
+    </div>
+
+    <!-- Key Statistics Table -->
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th>Metric</th>
+                <th>Value</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Open</td>
+                <td>$184.00</td>
+            </tr>
+            <tr>
+                <td>Previous Close</td>
+                <td>$183.15</td>
+            </tr>
+            <tr>
+                <td>Day Range</td>
+                <td>183.10 - 187.20</td>
+            </tr>
+            <tr>
+                <td>52 Week Range</td>
+                <td>124.17 - 199.62</td>
+            </tr>
+            <tr>
+                <td>Volume</td>
+                <td>45.68M</td>
+            </tr>
+            <tr>
+                <td>Market Cap</td>
+                <td>$2.85T</td>
+            </tr>
+            <tr>
+                <td>P/E Ratio</td>
+                <td>28.45</td>
+            </tr>
+            <tr>
+                <td>Dividend Yield</td>
+                <td>0.52%</td>
+            </tr>
+            <tr>
+                <td>Avg Volume (3M)</td>
+                <td>52.3M</td>
+            </tr>
+            <tr>
+                <td>Beta</td>
+                <td>1.24</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <!-- Market Data Cards (Alternative Layout) -->
+    <div class="market-cards">
+        <div class="quote-card">
+            <span class="ticker">AAPL</span>
+            <h3 class="name">Apple Inc.</h3>
+            <div class="price">$185.50</div>
+            <div class="change">+2.35 (+1.28%)</div>
+        </div>
+
+        <div class="quote-card">
+            <span class="ticker">MSFT</span>
+            <h3 class="name">Microsoft Corporation</h3>
+            <div class="price">$378.85</div>
+            <div class="change">+5.20 (+1.39%)</div>
+        </div>
+
+        <div class="quote-card">
+            <span class="ticker">GOOGL</span>
+            <h3 class="name">Alphabet Inc.</h3>
+            <div class="price">$142.65</div>
+            <div class="change">-1.15 (-0.80%)</div>
+        </div>
+    </div>
+
+    <!-- Multiple Quotes Table -->
+    <h2>Related Securities</h2>
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th>Symbol</th>
+                <th>Name</th>
+                <th>Price</th>
+                <th>Change</th>
+                <th>% Change</th>
+                <th>Volume</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>AAPL</td>
+                <td>Apple Inc.</td>
+                <td>$185.50</td>
+                <td>+2.35</td>
+                <td>+1.28%</td>
+                <td>45.68M</td>
+            </tr>
+            <tr>
+                <td>MSFT</td>
+                <td>Microsoft Corporation</td>
+                <td>$378.85</td>
+                <td>+5.20</td>
+                <td>+1.39%</td>
+                <td>22.45M</td>
+            </tr>
+            <tr>
+                <td>GOOGL</td>
+                <td>Alphabet Inc.</td>
+                <td>$142.65</td>
+                <td>-1.15</td>
+                <td>-0.80%</td>
+                <td>18.92M</td>
+            </tr>
+            <tr>
+                <td>AMZN</td>
+                <td>Amazon.com Inc.</td>
+                <td>$172.30</td>
+                <td>+3.85</td>
+                <td>+2.29%</td>
+                <td>35.12M</td>
+            </tr>
+            <tr>
+                <td>TSLA</td>
+                <td>Tesla Inc.</td>
+                <td>$248.50</td>
+                <td>+12.40</td>
+                <td>+5.25%</td>
+                <td>125.67M</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <!-- Test Data with Various Number Formats -->
+    <div style="display: none;" id="test-data">
+        <!-- K/M/B/T suffix tests -->
+        <span class="test-volume">1.5K</span>
+        <span class="test-volume">45.68M</span>
+        <span class="test-market-cap">2.85B</span>
+        <span class="test-market-cap">1.2T</span>
+
+        <!-- Percentage tests -->
+        <span class="test-percent">5.2%</span>
+        <span class="test-percent">-3.45%</span>
+        <span class="test-percent">+12.8%</span>
+
+        <!-- Currency tests -->
+        <span class="test-currency">$1,234.56</span>
+        <span class="test-currency">€987.65</span>
+        <span class="test-currency">£543.21</span>
+
+        <!-- Range tests -->
+        <span class="test-range">100.5 - 105.3</span>
+        <span class="test-range">124.17 – 199.62</span>
+
+        <!-- Negative values -->
+        <span class="test-negative">-15.50</span>
+        <span class="test-negative">($25.30)</span>
+    </div>
+</body>
+</html>
